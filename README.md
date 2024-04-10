@@ -10,4 +10,5 @@ qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -enable-kvm -cpu host -smp 4 -m
 Instala o Windows.\
 Instala o script bat para reiniciar caso não tenha acesso a internet.\
 Instala TeamViewer.\
+Desabilitar botão Power.\
 Instala driver de rede.
