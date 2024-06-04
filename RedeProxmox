@@ -1,0 +1,31 @@
+source /etc/network/interfaces.d/*
+
+auto lo
+iface lo inet loopback
+iface lo inet6 loopback
+
+auto eno1
+iface eno1 inet static
+        address 178.6.84.248/26
+        gateway 178.6.84.193
+        up route add -net 178.6.84.192 netmask 255.255.255.192 gw 178.6.84.193 dev eno1
+
+iface eno1 inet6 static
+        address 2a01:4f8:121:3fa::2/128
+        gateway fe80::1
+
+auto vmbr0
+iface vmbr0 inet static
+        address 10.10.10.1/24
+        bridge-ports none
+        bridge-stp off
+        bridge-fd 0
+        post-up   echo 1 > /proc/sys/net/ipv4/ip_forward
+        post-up   iptables -t nat -A POSTROUTING -s '10.10.10.0/24' -o eno1 -j MASQUERADE
+        post-down iptables -t nat -D POSTROUTING -s '10.10.10.0/24' -o eno1 -j MASQUERADE
+
+iface vmbr0 inet6 static
+        address 2a01:4f8:121:3fa::3/64
+        up ip -6 route add 2a01:4f8:121:3fa::/64 dev vmbr0
+
+// post-up  iptables -t nat -A PREROUTING -p tcp -d 178.6.84.248 --dport 443 -j REDIRECT --to-ports 8006
