@@ -1,1 +1,3 @@
 Dicas para servidor dedicado Hetzner Auction...
+
+wmic nic get 'name,index'
